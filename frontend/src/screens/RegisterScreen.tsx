@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text } from "react-native";
+import { View, TextInput, Button, Text, StyleSheet } from "react-native";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
@@ -41,7 +41,7 @@ const RegisterScreen = ({ navigation }: any) => {
   };
 
   return (
-    <View style={{ padding: 20 }}>
+    <View style={styles.container}>
       <TextInput placeholder="Nome" value={name} onChangeText={setName} />
       <TextInput placeholder="Email" value={email} onChangeText={setEmail} />
       <TextInput
@@ -56,11 +56,9 @@ const RegisterScreen = ({ navigation }: any) => {
         onChangeText={(text) => setAddress(formatCep(text))}
       />
 
-      {error && (
-        <Text style={{ color: "red", marginVertical: 5 }}>{error}</Text>
-      )}
+      {error && <Text style={styles.error}>{error}</Text>}
 
-      <View style={{ marginBottom: 10 }}>
+      <View style={styles.buttonContainer}>
         <Button
           title={loading ? "Cadastrando..." : "Cadastrar"}
           onPress={handleRegister}
@@ -77,5 +75,18 @@ const RegisterScreen = ({ navigation }: any) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+  error: {
+    color: "red",
+    marginVertical: 5,
+  },
+  buttonContainer: {
+    marginBottom: 10,
+  },
+});
 
 export default RegisterScreen;

@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { View, Text, FlatList, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
 
@@ -20,17 +26,13 @@ type RootStackParamList = {
 
 const UbsScreen = () => {
   const dispatch = useDispatch<AppDispatch>();
-
   const userAddress = useSelector(
     (state: RootState) => state.auth.user?.address
   );
-
   const { list, loading, error } = useSelector((state: RootState) => state.ubs);
-
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-  // Buscar UBS
   useEffect(() => {
     dispatch(fetchUBS());
   }, [dispatch]);
@@ -44,14 +46,14 @@ const UbsScreen = () => {
   );
 
   return (
-    <View style={{ padding: 20, flex: 1 }}>
-      <Text style={{ fontWeight: "bold", fontSize: 18, marginBottom: 10 }}>
+    <View style={styles.container}>
+      <Text style={styles.title}>
         Lista de UBS mais próximas de:{" "}
         {userAddress || "Endereço não disponível"}
       </Text>
 
-      {loading && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
-      {error && <Text style={{ color: "red", marginTop: 10 }}>{error}</Text>}
+      {loading && <ActivityIndicator size="large" style={styles.loader} />}
+      {error && <Text style={styles.error}>{error}</Text>}
 
       {!loading && !error && (
         <FlatList
@@ -63,5 +65,24 @@ const UbsScreen = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+    flex: 1,
+  },
+  title: {
+    fontWeight: "bold",
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  loader: {
+    marginTop: 20,
+  },
+  error: {
+    color: "red",
+    marginTop: 10,
+  },
+});
 
 export default UbsScreen;
