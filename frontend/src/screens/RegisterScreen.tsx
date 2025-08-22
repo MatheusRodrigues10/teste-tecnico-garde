@@ -45,7 +45,7 @@ const RegisterScreen = ({ navigation }: any) => {
       <TextInput placeholder="Nome" value={name} onChangeText={setName} />
       <TextInput placeholder="Email" value={email} onChangeText={setEmail} />
       <TextInput
-        placeholder="Senha"
+        placeholder="Senha (mínimo 6 caracteres)"
         value={password}
         onChangeText={setPassword}
         secureTextEntry

@@ -1,15 +1,19 @@
 import React from "react";
 import { View, Text, Button, Alert, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
+
+// Redux
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../redux/store";
 import { logout } from "../redux/authSlice";
-import { RootState, AppDispatch } from "../redux/store";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
 
-  // Sair
+  const user = useSelector((state: RootState) => state.auth.user);
+
+  // Logout
   const handleLogout = () => {
     Alert.alert("Logout", "Deseja realmente sair?", [
       { text: "Cancelar", style: "cancel" },
@@ -18,7 +22,12 @@ const ProfileScreen = () => {
         style: "destructive",
         onPress: () => {
           dispatch(logout());
-          navigation.navigate("Login" as never);
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "Login" }],
+            })
+          );
         },
       },
     ]);
@@ -27,6 +36,11 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Perfil</Text>
+
+      <Text style={styles.userName}>
+        {user?.name ? `Olá, ${user.name}` : "Usuário não disponível"}
+      </Text>
+
       <View style={styles.buttonContainer}>
         <Button title="Sair" onPress={handleLogout} color="#2a9d8f" />
       </View>
@@ -43,6 +57,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  title: { fontSize: 24, marginBottom: 30 },
+  title: { fontSize: 24, marginBottom: 20, fontWeight: "bold" },
+  userName: { fontSize: 20, marginBottom: 30 },
   buttonContainer: { width: "80%", marginVertical: 10 },
 });

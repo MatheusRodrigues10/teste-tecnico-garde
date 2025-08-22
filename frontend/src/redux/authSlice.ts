@@ -45,35 +45,53 @@ export const registerUser = createAsyncThunk(
         password,
         address: address.trim(),
       });
+
+      // Criar objeto user para Redux
+      const user: User = {
+        id: res.data._id,
+        name: res.data.name,
+        email: res.data.email,
+        address: res.data.address,
+      };
+
       if (res.data.token) await AsyncStorage.setItem("token", res.data.token);
-      if (res.data.user)
-        await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
-      return res.data;
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+
+      return { token: res.data.token, user };
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Erro no cadastro");
     }
   }
 );
 
-//Login
+// Login
 export const loginUser = createAsyncThunk(
   "users/login",
   async (
     { email, password }: { email: string; password: string },
     { rejectWithValue }
   ) => {
-    if (!email || !password) {
+    if (!email || !password)
       return rejectWithValue("Email e senha são obrigatórios.");
-    }
+
     try {
       const res = await api.post("/users/login", {
         email: email.trim(),
         password,
       });
+
+      // Criar objeto user para Redux
+      const user: User = {
+        id: res.data._id,
+        name: res.data.name,
+        email: res.data.email,
+        address: res.data.address,
+      };
+
       if (res.data.token) await AsyncStorage.setItem("token", res.data.token);
-      if (res.data.user)
-        await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
-      return res.data;
+      await AsyncStorage.setItem("user", JSON.stringify(user));
+
+      return { token: res.data.token, user };
     } catch (err: any) {
       return rejectWithValue(err.response?.data?.message || "Erro no login");
     }
@@ -96,7 +114,7 @@ const authSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    //Cadastro
+    // Cadastro
     builder.addCase(registerUser.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -114,7 +132,7 @@ const authSlice = createSlice({
       state.error = action.payload;
     });
 
-    //Login
+    // Login
     builder.addCase(loginUser.pending, (state) => {
       state.loading = true;
       state.error = null;

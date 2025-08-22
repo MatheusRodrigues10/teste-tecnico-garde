@@ -10,16 +10,19 @@ const generateToken = (id) => {
 // Registro de usuário
 export const registerUser = async (req, res) => {
   const { name, email, password, address } = req.body;
+
   try {
     const userExists = await User.findOne({ email });
     if (userExists)
       return res.status(400).json({ message: "Usuário já existe" });
 
     const user = await User.create({ name, email, password, address });
+
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      address: user.address,
       token: generateToken(user._id),
     });
   } catch (error) {
@@ -30,6 +33,7 @@ export const registerUser = async (req, res) => {
 // Login
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+
   try {
     const user = await User.findOne({ email });
     if (!user)
@@ -42,6 +46,7 @@ export const loginUser = async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      address: user.address,
       token: generateToken(user._id),
     });
   } catch (error) {

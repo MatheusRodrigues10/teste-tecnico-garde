@@ -5,5 +5,5 @@ export const validateEmail = (email: string): string | null => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email.trim())) return "Email inválido.";
 
-  return null; // sem erro
+  return null;
 };
