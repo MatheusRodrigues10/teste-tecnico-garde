@@ -18,7 +18,11 @@ const RegisterScreen = ({ navigation }: any) => {
     dispatch(registerUser({ name, email, password, address })).then(
       (res: any) => {
         if (res.meta.requestStatus === "fulfilled") {
-          navigation.navigate("Login");
+          //remove outras telas do historico
+          navigation.reset({
+            index: 0,
+            routes: [{ name: "Home" }],
+          });
         }
       }
     );
@@ -35,7 +39,7 @@ const RegisterScreen = ({ navigation }: any) => {
         secureTextEntry
       />
       <TextInput
-        placeholder="Endereço"
+        placeholder="Endereço (CEP)"
         value={address}
         onChangeText={(text) => setAddress(formatCep(text))}
       />

@@ -8,7 +8,6 @@ import { RootState, AppDispatch } from "../redux/store";
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch<AppDispatch>();
-  const user = useSelector((state: RootState) => state.auth.user);
 
   // Sair
   const handleLogout = () => {

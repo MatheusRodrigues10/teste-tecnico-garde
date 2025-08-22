@@ -1,9 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
+import ubsReducer from "./ubsSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    ubs: ubsReducer,
   },
 });
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../redux/authSlice"; // caminho do slice
+import { loginUser } from "../redux/authSlice";
 import { RootState, AppDispatch } from "../redux/store";
 
 const LoginScreen = ({ navigation }: any) => {
@@ -14,7 +14,7 @@ const LoginScreen = ({ navigation }: any) => {
   const handleLogin = () => {
     dispatch(loginUser({ email, password })).then((res: any) => {
       if (res.meta.requestStatus === "fulfilled") {
-        // Retira as outras telas do histórico e navega para a tela de UBS
+        //remove outras telas do historico
         navigation.reset({
           index: 0,
           routes: [{ name: "Home" }],
