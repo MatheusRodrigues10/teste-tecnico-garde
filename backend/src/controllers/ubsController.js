@@ -66,20 +66,33 @@ export const getUbsById = async (req, res) => {
     if (!id)
       return res.status(400).json({ message: "ID da UBS é obrigatório" });
 
-    // Formata o ID como node
     const osmIdFormatted = `N${id}`;
 
     const { data } = await axios.get(
       "https://nominatim.openstreetmap.org/lookup",
-      {
-        params: { osm_ids: osmIdFormatted, format: "json", addressdetails: 1 },
-      }
+      { params: { osm_ids: osmIdFormatted, format: "json", addressdetails: 1 } }
     );
 
     if (!data || data.length === 0)
       return res.status(404).json({ message: "UBS não encontrada" });
 
-    res.json(data[0]);
+    // Normaliza os dados para o frontend
+    const ubs = data[0];
+    res.json({
+      id: ubs.place_id,
+      name: ubs.display_name,
+      address: {
+        road: ubs.address.road || "",
+        house_number: ubs.address.house_number || "",
+        suburb: ubs.address.suburb || "",
+        city: ubs.address.city || "",
+        state: ubs.address.state || "",
+        postcode: ubs.address.postcode || "",
+        country: ubs.address.country || "",
+      },
+      lat: ubs.lat,
+      lon: ubs.lon,
+    });
   } catch (error) {
     console.error(error);
     res
