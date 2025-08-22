@@ -59,32 +59,53 @@ export const getNearbyUbs = async (req, res) => {
   }
 };
 
-// Busca UBS específica pelo osm_id
+// Cache simples em memória para reduzir chamadas repetidas
+const ubsCache = new Map();
+
 export const getUbsById = async (req, res) => {
   try {
-    const { id } = req.params;
+    // Validação do ID
+    const id = req.params.id?.trim();
     if (!id)
       return res.status(400).json({ message: "ID da UBS é obrigatório" });
 
-    // Formata o ID como node
-    const osmIdFormatted = `N${id}`;
+    // Formata o ID como node, mantendo apenas números
+    const osmIdFormatted = `N${id.replace(/\D/g, "")}`;
 
+    // Verifica cache
+    if (ubsCache.has(osmIdFormatted)) {
+      return res.json(ubsCache.get(osmIdFormatted));
+    }
+
+    // Requisição para Nominatim
     const { data } = await axios.get(
       "https://nominatim.openstreetmap.org/lookup",
       {
         params: { osm_ids: osmIdFormatted, format: "json", addressdetails: 1 },
+        headers: { "User-Agent": "UBSFinder (matheusrodrigues10r@gmail.com)" },
+        timeout: 10000, // 10s
       }
     );
 
-    if (!data || data.length === 0)
+    if (!data || data.length === 0) {
       return res.status(404).json({ message: "UBS não encontrada" });
+    }
+
+    // Salva no cache
+    ubsCache.set(osmIdFormatted, data[0]);
 
     res.json(data[0]);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao buscar UBS por ID:", error.message);
+    if (error.response && error.response.status === 429) {
+      return res
+        .status(429)
+        .json({
+          message: "Limite de requisições atingido, tente novamente mais tarde",
+        });
+    }
     res
       .status(500)
       .json({ message: "Erro ao buscar UBS por ID", error: error.message });
   }
 };
-
