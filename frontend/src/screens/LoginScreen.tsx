@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../redux/authSlice";
+
+//redux
 import { RootState, AppDispatch } from "../redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser, resetError } from "../redux/authSlice";
+
+//utils
+import { validateEmail, validatePassword } from "../utils";
 
 const LoginScreen = ({ navigation }: any) => {
   const [email, setEmail] = useState("");
@@ -12,9 +17,17 @@ const LoginScreen = ({ navigation }: any) => {
   const { loading, error } = useSelector((state: RootState) => state.auth);
 
   const handleLogin = () => {
+    //Validações
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+
+    if (emailError || passwordError) {
+      alert(emailError || passwordError); //mostra o primeiro erro encontrado
+      return;
+    }
+
     dispatch(loginUser({ email, password })).then((res: any) => {
       if (res.meta.requestStatus === "fulfilled") {
-        //remove outras telas do historico
         navigation.reset({
           index: 0,
           routes: [{ name: "Home" }],
@@ -38,9 +51,9 @@ const LoginScreen = ({ navigation }: any) => {
         secureTextEntry
       />
 
-      {error ? (
+      {error && (
         <Text style={{ color: "red", marginVertical: 5 }}>{error}</Text>
-      ) : null}
+      )}
 
       <View style={{ marginBottom: 10 }}>
         <Button
@@ -51,7 +64,10 @@ const LoginScreen = ({ navigation }: any) => {
 
       <Button
         title="Cadastrar"
-        onPress={() => navigation.navigate("Register")}
+        onPress={() => {
+          dispatch(resetError());
+          navigation.navigate("Register");
+        }}
       />
     </View>
   );

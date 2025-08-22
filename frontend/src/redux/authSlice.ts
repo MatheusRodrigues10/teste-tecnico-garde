@@ -91,6 +91,9 @@ const authSlice = createSlice({
       AsyncStorage.removeItem("token");
       AsyncStorage.removeItem("user");
     },
+    resetError: (state) => {
+      state.error = null;
+    },
   },
   extraReducers: (builder) => {
     //Cadastro
@@ -131,5 +134,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { logout } = authSlice.actions;
+export const { logout, resetError } = authSlice.actions;
 export default authSlice.reducer;

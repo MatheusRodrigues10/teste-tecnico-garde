@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { View, TextInput, Button, Text } from "react-native";
+
+//redux
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../redux/authSlice";
+import { registerUser, resetError } from "../redux/authSlice";
 import { RootState, AppDispatch } from "../redux/store";
-import { formatCep } from "../utils/formatCep";
+
+//utils
+import { formatCep, validateEmail, validatePassword } from "../utils";
 
 const RegisterScreen = ({ navigation }: any) => {
   const [name, setName] = useState("");
@@ -15,10 +19,18 @@ const RegisterScreen = ({ navigation }: any) => {
   const { loading, error } = useSelector((state: RootState) => state.auth);
 
   const handleRegister = () => {
+    //Validações
+    const emailError = validateEmail(email);
+    const passwordError = validatePassword(password);
+
+    if (emailError || passwordError) {
+      alert(emailError || passwordError); //mostra o primeiro erro encontrado
+      return;
+    }
+
     dispatch(registerUser({ name, email, password, address })).then(
       (res: any) => {
         if (res.meta.requestStatus === "fulfilled") {
-          //remove outras telas do historico
           navigation.reset({
             index: 0,
             routes: [{ name: "Home" }],
@@ -44,9 +56,9 @@ const RegisterScreen = ({ navigation }: any) => {
         onChangeText={(text) => setAddress(formatCep(text))}
       />
 
-      {error ? (
+      {error && (
         <Text style={{ color: "red", marginVertical: 5 }}>{error}</Text>
-      ) : null}
+      )}
 
       <View style={{ marginBottom: 10 }}>
         <Button
@@ -55,7 +67,13 @@ const RegisterScreen = ({ navigation }: any) => {
         />
       </View>
 
-      <Button title="Logar" onPress={() => navigation.navigate("Login")} />
+      <Button
+        title="Logar"
+        onPress={() => {
+          dispatch(resetError());
+          navigation.navigate("Login");
+        }}
+      />
     </View>
   );
 };
