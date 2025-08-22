@@ -1,23 +1,25 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { ScrollView, ActivityIndicator, Text } from "react-native";
-import { useRoute, RouteProp } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchUBSById } from "../redux/ubsSlice";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
+import { AppDispatch, RootState } from "../redux/store";
+import { fetchUBSById } from "../redux/ubsSlice";
 import { UbsInfo, UbsAddress } from "../components/UbsDetailScreen";
 
 type RootStackParamList = {
   UbsDetail: { id: number };
 };
 
-type UbsDetailRouteProp = RouteProp<RootStackParamList, "UbsDetail">;
+type Props = NativeStackScreenProps<RootStackParamList, "UbsDetail">;
 
-export default function UbsDetailScreen() {
-  const route = useRoute<UbsDetailRouteProp>();
+export default function UbsDetailScreen({ route }: Props) {
   const { id } = route.params;
 
-  const dispatch = useDispatch<any>();
-  const { selected, loading, error } = useSelector((state: any) => state.ubs);
+  const dispatch = useDispatch<AppDispatch>();
+  const { selected, loading, error } = useSelector(
+    (state: RootState) => state.ubs
+  );
 
   useEffect(() => {
     dispatch(fetchUBSById(id));

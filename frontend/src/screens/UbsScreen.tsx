@@ -19,10 +19,7 @@ import UBSItem from "../components/UBSItem";
 
 //types
 import { UBSBasic } from "../types/ubs";
-
-type RootStackParamList = {
-  UbsDetail: { id: number };
-};
+import { RootStackParamList } from "../types/navigation";
 
 const UbsScreen = () => {
   const dispatch = useDispatch<AppDispatch>();

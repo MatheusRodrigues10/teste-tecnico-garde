@@ -1,4 +1,4 @@
 export type RootStackParamList = {
   UbsList: undefined;
-  UbsDetail: { id: string };
+  UbsDetail: { id: number };
 };

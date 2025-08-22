@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, StyleSheet } from "react-native";
+import { View, TextInput, Button, Text } from "react-native";
 
 //redux
 import { useDispatch, useSelector } from "react-redux";
@@ -76,7 +76,7 @@ const RegisterScreen = ({ navigation }: any) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     padding: 20,
   },
@@ -87,6 +87,6 @@ const styles = StyleSheet.create({
   buttonContainer: {
     marginBottom: 10,
   },
-});
+};
 
 export default RegisterScreen;
