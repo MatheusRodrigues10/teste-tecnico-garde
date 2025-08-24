@@ -69,7 +69,7 @@ teste-tecnico-garde/
 1. **Clone o repositório**
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/MatheusRodrigues10/teste-tecnico-garde
 cd teste-tecnico-garde/backend
 ```
 
@@ -258,4 +258,5 @@ Para o cálculo de coordenadas a partir do CEP, você precisa de uma chave da Op
 - **Express**: ^5.1.0
 - **MongoDB**: ^8.18.0
 - **TypeScript**: ~5.8.3
+
 
