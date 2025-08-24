@@ -236,20 +236,6 @@ Para o cálculo de coordenadas a partir do CEP, você precisa de uma chave da Op
 - CEP formatado automaticamente
 - Campos obrigatórios
 
-## Deploy
-
-### Backend
-
-- Configure as variáveis de ambiente no servidor
-- Use PM2 ou similar para manter o processo ativo
-- Configure um proxy reverso (nginx) se necessário
-
-### Frontend
-
-- Build para produção: `expo build`
-- Publique no Expo: `expo publish`
-- Ou gere APK/IPA: `expo build:android` / `expo build:ios`
-
 ## Versões Utilizadas
 
 - **Node.js**: v18+
@@ -258,5 +244,3 @@ Para o cálculo de coordenadas a partir do CEP, você precisa de uma chave da Op
 - **Express**: ^5.1.0
 - **MongoDB**: ^8.18.0
 - **TypeScript**: ~5.8.3
-
-
